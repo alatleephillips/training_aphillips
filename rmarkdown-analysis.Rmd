@@ -1,0 +1,84 @@
+---
+title: "RMarkdown Analysis"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+date: "2023-04-03"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The data set we are analyzing comes from the [Arctic Data Center](https://arcticdata.io/catalog/view/doi:10.18739/A25T3FZ8X) and contains biogeochemical data from CTD measurements in the south Arctic ocean. This data set includes diverse measurements of seawater chemistry along with supporting conductivity, temperature, and depth (CTD) data. Measurements were taken from sea ice platforms each April or May from 2000-2014. Downloaded on April 3, 2023. 
+
+### Read Data
+
+#### Set up
+```{r}
+library(readr)
+```
+
+
+```{r read data, warning=FALSE, message=FALSE}
+bg_chem <- readr::read_csv("data/BGchem2008data.csv")
+
+```
+
+#### Data Exploration 
+
+```{r data exploration, eval=FALSE, echo=FALSE}
+## column names
+colnames(bg_chem)
+
+## structure of my data
+str(bg_chem)
+
+##summary stats
+summary(bg_chem)
+
+## open data in tab 
+View(bg_chem)
+
+## unique values in a column - gives the indivdual ones that 
+unique(bg_chem$Date)
+
+```
+
+
+## Analysis
+
+### Calculate summary statistics
+
+```{r summaries}
+nitrate <- mean(bg_chem$NO3)
+nitrite <- mean(bg_chem$NO2)
+amm <- mean(bg_chem$NH4)
+phos <- mean(bg_chem$P)
+```
+
+
+### Calculate mean Redfield ratio
+
+Redfield ratio is 16:1 N:P 
+
+```{r ratio calc}
+
+ratio <- (amm + nitrate + nitrite)/phos
+```
+
+
+### Plot Redfield ratio
+
+```{r plot}
+plot(bg_chem$P, bg_chem$NO3 + bg_chem$NO2 + bg_chem$NH4)
+```
+
+
+## Conclusions
+
+The redfield ratio is `r round(ratio)`
+
