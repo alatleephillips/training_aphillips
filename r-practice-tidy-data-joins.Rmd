@@ -1,0 +1,34 @@
+---
+title: 'R Practice: Tidy Data and Joins'
+author: "Alex Phillips"
+date: "2023-04-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## load libraries 
+```{r, warning=FALSE, message=FALSE}
+library(readr)
+library(dplyr)
+library(lubridate)
+```
+
+## load data
+Data is coming from the [EDI Data Portal](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-cap&identifier=256&revision=10) Ecological and social interactions in urban parks: bird surveys in local parks in the central Arizona-Phoenix metropolitan area. 
+
+```{r download data, message=FALSE}
+
+birds_data <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=53edaa7a0e083013d9bf20322db1780e")
+
+survey_data <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=b2466fa5cb5ed7ee1ea91398fc291c59")
+
+sites_data <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=81bf72420e69077097fb0790dcdc63a6")
+
+taxa_data <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=58f863b7e3066e68536a9cacdc7bd58e")
+
+```
+
+
