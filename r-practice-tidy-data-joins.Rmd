@@ -21,14 +21,42 @@ Data is coming from the [EDI Data Portal](https://portal.edirepository.org/nis/m
 
 ```{r download data, message=FALSE}
 
-birds_data <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=53edaa7a0e083013d9bf20322db1780e")
+bird_observations <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=53edaa7a0e083013d9bf20322db1780e")
 
-survey_data <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=b2466fa5cb5ed7ee1ea91398fc291c59")
+surveys <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=b2466fa5cb5ed7ee1ea91398fc291c59")
 
-sites_data <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=81bf72420e69077097fb0790dcdc63a6")
+sites <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=81bf72420e69077097fb0790dcdc63a6")
 
-taxa_data <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=58f863b7e3066e68536a9cacdc7bd58e")
+taxalist <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=58f863b7e3066e68536a9cacdc7bd58e")
 
 ```
 
+## Exploring the data
+
+```{r Exploring}
+
+colnames(sites)
+
+dim(sites)
+head(bird_observations)
+glimpse(bird_observations)
+summary(bird_observations)
+names(bird_observations)
+unique(bird_observations$species_id)
+```
+
+## Creating a subset
+Want a subset that has just `BHCO` and `RWBL` and site IDs of `LI-W` and `NU-C`
+
+```{r Subset}
+
+birds_subset <- bird_observations %>% 
+  filter(species_id == "BHCO" | species_id == "RWBL", 
+         site_id == "LI-W" | site_id == "NU-C")
+
+## unique(birds_subset$site_id)
+
+head(birds_subset)
+
+```
 
