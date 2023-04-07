@@ -1,0 +1,120 @@
+---
+title: "Mapping with sf package"
+author: "Alex Phillips"
+date: "2023-04-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## load library 
+
+```{r library stuff, message=FALSE, error=FALSE}
+library(readr)
+library(sf)
+library(ggplot2)
+library(leaflet)
+library(scales)
+library(ggmap)
+library(dplyr)
+```
+
+## explore data 
+
+Explore the AK regions data - load the shape file in.
+
+```{r read AK region data}
+
+ak_regions <- sf::read_sf("data/ak_regions_simp.shp")
+plot(ak_regions)
+
+```
+
+```{r more exploring}
+
+head(ak_regions)
+
+```
+
+```{r}
+
+st_crs(ak_regions)
+
+```
+
+
+## Transform CRS of ak regions
+3338 is the EPSG code of the projection we are using from [spatial reference](https://spatialreference.org/ref/epsg/?page=1) list
+
+```{r}
+
+ak_regions_3338 <- ak_regions %>% 
+  st_transform(crs = 3338)
+
+st_crs(ak_regions_3338)
+
+```
+
+```{r}
+
+plot(ak_regions_3338)
+
+```
+
+## sf and the tidyverse 
+
+```{r}
+
+ak_regions_3338 %>%  select(region)
+
+```
+```{r}
+
+ak_regions_3338 %>% filter(region == "Yukon")
+
+```
+
+## Spatial Joins
+
+```{r, message=FALSE}
+
+pop <- read_csv("data/alaska_population.csv")
+class(pop)
+
+pop_4326 <- st_as_sf(pop,
+                     coords = c("lng","lat"),
+                     crs = 4326,
+                     remove = FALSE)
+
+```
+
+```{r}
+
+pop_joined <- st_join(pop_3338, ak_regions_3338, join=st_within)
+
+```
+
+```{r}
+
+pop_3338 <- st_transform(pop_4326, crs = 3338)
+
+st_crs(pop_3338)
+
+```
+
+```{r}
+
+pop_region <- pop_joined %>% 
+  as.data.frame() %>% 
+  group_by(region) %>% 
+  summarize(total_pop = sum(population))
+
+head(pop)
+
+```
+
+
+
+
